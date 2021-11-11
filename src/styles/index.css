@@ -3,7 +3,6 @@
     /* Project id 2929337 */
     src: url('//at.alicdn.com/t/font_2929337_f8ew9igq1xd.woff2?t=1636542978436') format('woff2'), url('//at.alicdn.com/t/font_2929337_f8ew9igq1xd.woff?t=1636542978436') format('woff'), url('//at.alicdn.com/t/font_2929337_f8ew9igq1xd.ttf?t=1636542978436') format('truetype');
 }
-
 .toutiao {
     font-family: "toutiao" !important;
     font-size: 16px;
@@ -11,63 +10,48 @@
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
 }
-
 .icon-shanchu:before {
     content: "\e601";
 }
-
 .icon-dianzan2:before {
     content: "\e602";
 }
-
 .icon-gengduo:before {
     content: "\e603";
 }
-
 .icon-guanbi:before {
     content: "\e604";
 }
-
 .icon-pinglun:before {
     content: "\e605";
 }
-
 .icon-fenxiang:before {
     content: "\e606";
 }
-
 .icon-lishi:before {
     content: "\e607";
 }
-
 .icon-shouye:before {
     content: "\e608";
 }
-
 .icon-sousuo:before {
     content: "\e609";
 }
-
 .icon-wuwangluo:before {
     content: "\e60a";
 }
-
 .icon-zuojiantou:before {
     content: "\e60b";
 }
-
 .icon-yanzhengma:before {
     content: "\e60c";
 }
-
 .icon-wenda:before {
     content: "\e60d";
 }
-
 .icon-shouji:before {
     content: "\e60e";
 }
-
 .icon-shipin:before {
     content: "\e60f";
 }
@@ -76,4 +60,7 @@
     content: "\e610";
 }
 
+body {
+    background-color: #f5f7f9;
+}
 /*# sourceMappingURL=index.css.map */
