@@ -1,15 +1,12 @@
 <template>
   <div>
-    <router-view></router-view>
+    <h1>Qa</h1>
   </div>
 </template>
 
 <script>
 export default {
-  data () {
-    return {}
-  },
-  methods: {}
+  name: 'index'
 }
 </script>
 
