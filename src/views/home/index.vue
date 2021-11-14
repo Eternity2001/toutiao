@@ -47,7 +47,6 @@ import ArticleList from './components/article-list'
 export default {
   name: 'HomeIndex',
   components: {
-    // eslint-disable-next-line vue/no-unused-components
     ArticleList
   },
   props: {},
