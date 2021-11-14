@@ -6,44 +6,44 @@
     <van-form ref="loginForm" @submit="onSubmit">
       <van-field
         v-model="user.mobile"
-        name="mobile"
-        placeholder="请输入手机号"
         :rules="userFormRules.mobile"
         maxlength="11"
+        name="mobile"
+        placeholder="请输入手机号"
       >
         <i slot="left-icon" class="toutiao icon-shouji"></i>
       </van-field>
       <van-field
         v-model="user.code"
+        :rules="userFormRules.code"
+        maxlength="6"
         name="code"
         placeholder="请输入验证码"
-        :rules="userFormRules.code"
         type="number"
-        maxlength="6"
       >
         <i slot="left-icon" class="toutiao icon-yanzhengma"></i>
         <template #button>
           <!--time是倒计时时间-->
           <van-count-down
+            v-if="isCountDownShow"
             :time="1000 * 60"
             format="sss"
-            v-if="isCountDownShow"
             @finish="isCountDownShow=false"
           />
           <van-button
+            v-else
             class="send-sms-btn"
             native-type="button"
             round
             size="small"
             type="default"
             @click="onSendSms"
-            v-else
           >发送验证码
           </van-button>
         </template>
       </van-field>
       <div style="margin: 16px;">
-        <van-button block type="info" native-type="submit">登录</van-button>
+        <van-button block native-type="submit" type="info">登录</van-button>
       </div>
     </van-form>
   </div>
@@ -119,6 +119,7 @@ export default {
       } catch (err) {
         console.log('发送失败', err)
         if (err.response.status === 429) {
+          this.isCountDownShow = false
           this.$toast('凑尼玛，慢点')
         } else {
           this.$toast('嘤嘤嘤，发送失败了')
@@ -129,7 +130,7 @@ export default {
 }
 </script>
 
-<style scoped lang="less">
+<style lang="less" scoped>
 .login-container {
   .toutiao {
     font-size: 37px;
