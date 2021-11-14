@@ -20,7 +20,6 @@ request.interceptors.request.use(function (config) {
     config.headers.Authorization = `Bearer ${user.token}`
   }
   // 注意：这里务必要返回 config 配置对象，否则请求就停在这里出不去了
-  console.log(config)
   return config
 }, function (error) {
   // 如果请求出错了（还没有发出去）会进入这里
