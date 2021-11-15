@@ -31,11 +31,24 @@
         <!-- 文章列表 -->
       </van-tab>
       <div slot="nav-right" class="placeholder"></div>
-      <div slot="nav-right" class="hamburger-btn">
+      <div slot="nav-right"
+           class="hamburger-btn"
+           @click="isChannelEditShown=true"
+      >
         <i class="toutiao icon-gengduo"></i>
       </div>
     </van-tabs>
     <!-- /频道列表 -->
+    <van-popup
+      v-model="isChannelEditShown"
+      :style="{ height: '100%' }"
+      close-icon-position="top-left"
+      closeable
+      duration=".2"
+      position="top"
+    >
+      <channel-edit>duangduangduang</channel-edit>
+    </van-popup>
   </div>
 </template>
 
@@ -43,17 +56,20 @@
 
 import { getUserChannels } from '@/api/user'
 import ArticleList from './components/article-list'
+import ChannelEdit from './components/channel-edit'
 
 export default {
   name: 'HomeIndex',
   components: {
-    ArticleList
+    ArticleList,
+    ChannelEdit
   },
   props: {},
   data () {
     return {
       active: 0,
-      channels: [] // 频道列表
+      channels: [], // 频道列表
+      isChannelEditShown: false
     }
   },
   computed: {},
@@ -66,6 +82,7 @@ export default {
       try {
         const { data } = await getUserChannels()
         this.channels = data.data.channels
+        console.log(this.channels)
       } catch (e) {
         this.$toast('获取频道数据失败,哒咩')
       }

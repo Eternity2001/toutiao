@@ -6,6 +6,7 @@ import Vant from 'vant'
 import 'amfe-flexible'
 import 'vant/lib/index.css'
 import './styles/index.less'
+import '@/utils/dayjs'
 
 Vue.use(Vant)
 
