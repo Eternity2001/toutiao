@@ -58,6 +58,7 @@
           :list="commentList"
           :source="article.art_id"
           @onload-success="totalCommentCount = $event.total_count"
+          @reply-click="onReplyClick"
         />
         <!--评论列表-->
       </div>
@@ -130,6 +131,19 @@
       </van-popup>
       <!-- 发布评论 -->
     </div>
+    <!-- 评论回复 -->
+    <van-popup
+      v-model="isReplyShow"
+      position="bottom"
+      style="height: 100%;"
+    >
+      <comment-reply
+        v-if="isReplyShow"
+        :comment="currentComment"
+        @close="isReplyShow = false"
+      />
+    </van-popup>
+    <!-- /评论回复 -->
     <!-- /底部区域 -->
   </div>
 </template>
@@ -143,6 +157,7 @@ import CollectArticle from '@/components/collect-article'
 import LikeArticle from '@/components/like-article'
 import CommentList from './components/comment-list'
 import CommentPost from './components/comment-post'
+import CommentReply from './components/comment-reply'
 
 export default {
   name: 'ArticleIndex',
@@ -151,7 +166,14 @@ export default {
     FollowUser,
     LikeArticle,
     CommentList,
-    CommentPost
+    CommentPost,
+    CommentReply
+  },
+  // 给所有的后代提供数据
+  provide: function () {
+    return {
+      getMap: this.articleId
+    }
   },
   props: {
     articleId: {
@@ -167,7 +189,9 @@ export default {
       followLoading: false,
       commentList: [],
       isPostShow: false,
-      totalCommentCount: 0
+      totalCommentCount: 0,
+      isReplyShow: false,
+      currentComment: {} // 当前点击回复的评论项
     }
   },
   computed: {},
@@ -246,6 +270,11 @@ export default {
       this.isPostShow = false
       // 将发布内容显示到列表顶部
       this.commentList.unshift(data.new_obj)
+    },
+    onReplyClick (comment) {
+      this.currentComment = comment
+      // 显示评论回复弹出层
+      this.isReplyShow = true
     }
   }
 }

@@ -24,6 +24,7 @@ import { addComment } from '@/api/comment'
 
 export default {
   name: 'CommentPost',
+  inject: ['getMap'],
   components: {},
   props: {
     target: {
@@ -61,6 +62,7 @@ export default {
         // 将发布内容显示到列表顶部
         // 清空文本框
         this.message = ''
+        console.log(data)
         this.$emit('post-success', data.data)
 
         this.$toast.success('发布成功')
