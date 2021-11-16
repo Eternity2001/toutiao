@@ -47,7 +47,10 @@
       duration=".2"
       position="top"
     >
-      <channel-edit>duangduangduang</channel-edit>
+      <channel-edit
+        :active="active"
+        :my-channels="channels"
+      ></channel-edit>
     </van-popup>
   </div>
 </template>
@@ -82,7 +85,7 @@ export default {
       try {
         const { data } = await getUserChannels()
         this.channels = data.data.channels
-        console.log(this.channels)
+        console.log(data)
       } catch (e) {
         this.$toast('获取频道数据失败,哒咩')
       }

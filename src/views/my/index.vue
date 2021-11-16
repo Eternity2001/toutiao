@@ -4,15 +4,15 @@
       <div class="base-info">
         <div class="left">
           <van-image
-            class="avatar"
             :src="userInfo.photo"
-            round
+            class="avatar"
             fit="cover"
+            round
           />
           <span class="name">{{ userInfo.name }}</span>
         </div>
         <div class="right">
-          <van-button size="mini" round>编辑资料</van-button>
+          <van-button round size="mini">编辑资料</van-button>
         </div>
       </div>
       <div class="data-stats">
@@ -36,11 +36,11 @@
     </div>
     <div v-else class="header not-login">
       <div class="login-btn" @click="$router.push('/login')">
-        <img class="mobile-img" src="~@/assets/mobile.png" alt="">
+        <img alt="" class="mobile-img" src="~@/assets/mobile.png">
         <div class="text">登录 / 注册</div>
       </div>
     </div>
-    <van-grid class="grid-nav mb-9" :column-num="2" clickable>
+    <van-grid :column-num="2" class="grid-nav mb-9" clickable>
       <van-grid-item class="grid-item">
         <i slot="icon" class="toutiao icon-shoucang"></i>
         <span slot="text" class="text">收藏</span>
@@ -50,8 +50,8 @@
         <span slot="text" class="text">历史</span>
       </van-grid-item>
     </van-grid>
-    <van-cell title="消息通知" is-link/>
-    <van-cell class="mb-9" title="小智同学" is-link/>
+    <van-cell is-link title="消息通知"/>
+    <van-cell class="mb-9" is-link title="小智同学"/>
     <van-cell
       v-if="user"
       class="logout-cell"
@@ -113,7 +113,7 @@ export default {
 }
 </script>
 
-<style scoped lang="less">
+<style lang="less" scoped>
 .my-container {
   .header {
     height: 361px;
