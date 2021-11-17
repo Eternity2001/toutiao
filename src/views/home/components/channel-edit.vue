@@ -19,13 +19,6 @@
         class="grid-item"
         @click="onMyChannelClick(channel, index)"
       >
-        <!--
-          v-bind:class 语法
-          一个对象，对象中的 key 表示要作用的 CSS 类名
-                    对象中的 value 要计算出布尔值
-                      true，则作用该类名
-                      false，不作用类名
-         -->
         <van-icon
           v-show="isEdit && !fiexdChannels.includes(channel.id)"
           slot="icon"
@@ -45,7 +38,7 @@
     </van-cell>
     <van-grid :gutter="10" class="recommend-grid">
       <van-grid-item
-        v-for="(channel, index) in allChannels"
+        v-for="(channel, index) in recommendChannels"
         :key="index"
         :text="channel.name"
         class="grid-item"
@@ -58,7 +51,9 @@
 </template>
 
 <script>
-import { getAllChannels } from '@/api/channel'
+import { addUserChannel, getAllChannels } from '@/api/channel'
+import { mapState } from 'vuex'
+import { setItem } from '@/utils/storage'
 
 export default {
   name: 'ChannelEdit',
@@ -81,6 +76,7 @@ export default {
     }
   },
   computed: {
+    ...mapState(['user']),
     recommendChannels () {
       return this.allChannels.filter(channel => {
         return !this.myChannels.find(myChannel => {
@@ -105,8 +101,23 @@ export default {
       }
     },
 
-    onAddChannel (channel) {
+    async onAddChannel (channel) {
       this.myChannels.push(channel)
+      // 数据持久化处理
+      if (this.user) {
+        try {
+          // 已登录，把数据请求接口放到线上
+          await addUserChannel({
+            id: channel.id, // 频道ID
+            seq: this.myChannels.length // 序号
+          })
+        } catch (err) {
+          this.$toast('保存失败，请稍后重试')
+        }
+      } else {
+        // 未登录，把数据存储到本地
+        setItem('TOUTIAO_CHANNELS', this.myChannels)
+      }
     },
 
     onMyChannelClick (channel, index) {
@@ -119,9 +130,6 @@ export default {
         // 2. 删除频道项
         this.myChannels.splice(index, 1)
 
-        // 3. 如果删除的激活频道之前的频道，则更新激活的频道项
-        // 参数1：要删除的元素的开始索引（包括）
-        // 参数2：删除的个数，如果不指定，则从参数1开始一直删除到最后
         if (index <= this.active) {
           // 让激活频道的索引 - 1
           this.$emit('update-active', this.active - 1, true)

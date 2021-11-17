@@ -8,6 +8,7 @@
         icon="search"
         round
         size="small"
+        to="search"
         type="info"
       >搜索
       </van-button>
@@ -50,6 +51,7 @@
       <channel-edit
         :active="active"
         :my-channels="channels"
+        @update-active="onUpdateActive"
       ></channel-edit>
     </van-popup>
   </div>
@@ -60,6 +62,8 @@
 import { getUserChannels } from '@/api/user'
 import ArticleList from './components/article-list'
 import ChannelEdit from './components/channel-edit'
+import { mapState } from 'vuex'
+import { getItem } from '@/utils/storage'
 
 export default {
   name: 'HomeIndex',
@@ -75,7 +79,9 @@ export default {
       isChannelEditShown: false
     }
   },
-  computed: {},
+  computed: {
+    ...mapState(['user'])
+  },
   watch: {},
   created () {
     this.loadChannels()
@@ -83,12 +89,35 @@ export default {
   methods: {
     async loadChannels () {
       try {
-        const { data } = await getUserChannels()
-        this.channels = data.data.channels
-        console.log(data)
-      } catch (e) {
-        this.$toast('获取频道数据失败,哒咩')
+        // const { data } = await getUserChannels()
+        // this.channels = data.data.channels
+        let channels = []
+
+        if (this.user) {
+          // 已登录，请求获取用户频道列表
+          const { data } = await getUserChannels()
+          channels = data.data.channels
+        } else {
+          // 未登录，判断是否有本地的频道列表数据
+          const localChannels = getItem('TOUTIAO_CHANNELS')
+          //    有，拿来使用
+          if (localChannels) {
+            channels = localChannels
+          } else {
+            //    没有，请求获取默认频道列表
+            const { data } = await getUserChannels()
+            channels = data.data.channels
+          }
+        }
+
+        this.channels = channels
+      } catch (err) {
+        this.$toast('获取频道数据失败')
       }
+    },
+    onUpdateActive (index) {
+      this.active = index
+      this.isChannelEditShown = false
     }
   }
 }
