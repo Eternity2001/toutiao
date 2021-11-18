@@ -22,3 +22,10 @@ export const addUserChannel = channel => {
     }
   })
 }
+
+export const deleteUserChannel = channelId => {
+  return request({
+    method: 'DELETE',
+    url: `/v1_0/user/channels/${channelId}`
+  })
+}

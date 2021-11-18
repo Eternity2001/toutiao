@@ -4,6 +4,7 @@
     <form action="/" class="search-form">
       <van-search
         v-model="searchText"
+        autofocus
         background="#3296fa"
         placeholder="请输入搜索关键词"
         show-action
@@ -19,7 +20,10 @@
     <!-- /搜索结果 -->
 
     <!-- 联想建议 -->
-    <search-suggestion v-else-if="searchText"/>
+    <search-suggestion
+      v-else-if="searchText"
+      :search-text="searchText"
+    />
     <!-- /联想建议 -->
 
     <!-- 历史记录 -->
@@ -34,7 +38,7 @@ import SearchResult from './components/search-result'
 import SearchSuggestion from './components/search-suggestion'
 
 export default {
-  name: 'index',
+  name: 'SearchIndex',
   components: {
     SearchHistory,
     SearchResult,
@@ -49,6 +53,7 @@ export default {
   methods: {
     onSearch (val) {
       console.log(val)
+      this.isResultShow = true
     },
     onCancel () {
       this.$router.back()

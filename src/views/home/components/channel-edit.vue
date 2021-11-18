@@ -51,7 +51,7 @@
 </template>
 
 <script>
-import { addUserChannel, getAllChannels } from '@/api/channel'
+import { addUserChannel, deleteUserChannel, getAllChannels } from '@/api/channel'
 import { mapState } from 'vuex'
 import { setItem } from '@/utils/storage'
 
@@ -119,6 +119,19 @@ export default {
         setItem('TOUTIAO_CHANNELS', this.myChannels)
       }
     },
+    async deleteChannel (channel) {
+      try {
+        if (this.user) {
+          // 已登录，将数据更新到线上
+          await deleteUserChannel(channel.id)
+        } else {
+          // 未登录，将数据更新到本地
+          setItem('TOUTIAO_CHANNELS', this.myChannels)
+        }
+      } catch (e) {
+        this.$toast('操作失败，请稍后重试')
+      }
+    },
 
     onMyChannelClick (channel, index) {
       if (this.isEdit) {
@@ -134,6 +147,9 @@ export default {
           // 让激活频道的索引 - 1
           this.$emit('update-active', this.active - 1, true)
         }
+
+        // 持久化删除
+        this.deleteChannel(channel)
       } else {
         // 非编辑状态，执行切换频道
         this.$emit('update-active', index, false)

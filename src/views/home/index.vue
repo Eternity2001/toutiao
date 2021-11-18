@@ -156,6 +156,7 @@ export default {
 
     .van-tab {
       border-right: 1px solid #edeff3;
+      border-bottom: 1px solid #edeff3;
       min-width: 200px;
       font-size: 30px;
       color: #777777;
@@ -171,7 +172,7 @@ export default {
 
     .van-tabs__line {
       bottom: 8px;
-      width: 31px !important;
+      width: 100px !important;
       height: 6px;
       background-color: #3296fa;
     }
