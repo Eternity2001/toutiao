@@ -1,14 +1,44 @@
 <template>
   <div class="search-history">
     <van-cell title="搜索历史">
-      <van-icon name="delete-o"/>
+      <div v-if="isDeleteShow">
+        <span @click="$emit('clear-search-histories')">全部删除</span>
+        &nbsp;&nbsp;
+        <span @click="isDeleteShow = false">完成</span>
+      </div>
+      <van-icon v-else name="delete" @click="isDeleteShow = true"/>
+    </van-cell>
+    <van-cell
+      v-for="(item, index) in searchHistories"
+      :key="index"
+      :title="item"
+      @click="onSearchItemClick(item, index)"
+    >
+      <van-icon v-show="isDeleteShow" name="close"/>
     </van-cell>
   </div>
 </template>
 
 <script>
 export default {
-  name: 'search-history'
+  name: 'search-history',
+  props: ['searchHistories'],
+  data () {
+    return {
+      isDeleteShow: false
+    }
+  },
+  methods: {
+    onSearchItemClick (item, index) {
+      if (this.isDeleteShow) {
+        // 删除状态，删除历史记录数据
+        this.searchHistories.splice(index, 1)
+      } else {
+        // 非删除状态，直接进入搜索
+        this.$emit('search', item)
+      }
+    }
+  }
 }
 </script>
 

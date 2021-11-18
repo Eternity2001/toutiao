@@ -18,11 +18,19 @@
 </template>
 
 <script>
+import { getSearchResults } from '@/api/search'
+
 export default {
   name: 'search-result',
+  props: {
+    searchText: {
+      type: String,
+      required: true
+    }
+  },
   data () {
     return {
-      list: [1, 2, 3, 4, 5, 6, 7, 8, 9],
+      list: [],
       loading: false,
       finished: false,
       page: 1,
@@ -31,8 +39,32 @@ export default {
     }
   },
   methods: {
-    onLoad (val) {
-      console.log(val, 'duangduangduangduangduangduangduangduangduangduang')
+    async onLoad () {
+      try {
+        const { data } = await getSearchResults({
+          page: this.page,
+          per_page: this.per_page,
+          q: this.searchText
+        })
+
+        // 将数据添加带数组中
+        const { results } = data.data
+        this.list.push(...results)
+        console.log(this.list)
+
+        this.loading = false
+
+        // 判断还否还有数据
+        if (results.length) {
+          this.page++
+        } else {
+          this.finished = true
+        }
+      } catch (e) {
+        this.$toast('数据获取失败')
+      }
+      // 请求获取数据
+      // 关闭本次 loading
     }
   }
 }
