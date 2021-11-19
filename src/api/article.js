@@ -13,3 +13,10 @@ export const getArticles = params => {
     params
   })
 }
+
+export const getArticleByid = articleId => {
+  return request({
+    method: 'GET',
+    url: `/v1_0/articles/${articleId}`
+  })
+}
