@@ -38,27 +38,11 @@
           />
           <div slot="title" class="user-name">{{ article.aut_name }}</div>
           <div slot="label" class="publish-date">{{ article.pubdate | relativeTime }}</div>
-          <van-button
-            v-if="article.is_followed"
-            :loading="followLoading"
+          <follow-user
+            v-model="article.is_followed"
+            :user-id="article.aut_id"
             class="follow-btn"
-            color="#3296fa"
-            icon="plus"
-            round
-            size="small"
-            type="info"
-            @click="onFollow"
-          >关注
-          </van-button>
-          <van-button
-            v-else
-            :loading="followLoading"
-            class="follow-btn"
-            round
-            size="small"
-            @click="onFollow"
-          >已关注
-          </van-button>
+          />
         </van-cell>
         <!-- /用户信息 -->
 
@@ -69,6 +53,13 @@
           v-html="article.content"
         ></div>
         <van-divider>正文结束</van-divider>
+        <!--评论列表-->
+        <comment-list
+          :list="commentList"
+          :source="article.art_id"
+          @onload-success="totalCommentCount = $event.total_count"
+        />
+        <!--评论列表-->
       </div>
       <!-- /加载完成-文章详情 -->
 
@@ -99,22 +90,45 @@
         round
         size="small"
         type="default"
+        @click="isPostShow=true"
       >写评论
       </van-button>
       <van-icon
-        badge="123"
+        :badge="totalCommentCount"
         color="#777"
         name="comment-o"
       />
-      <van-icon
-        color="#777"
-        name="star-o"
+      <collect-article
+        v-model="article.is_collected"
+        :article-id="article.art_id"
+        class="btn-item"
       />
-      <van-icon
+      <!-- <van-icon
+         color="#777"
+         name="star-o"
+         @click="star(article.art_id)"
+       />-->
+      <like-article
+        v-model="article.attitude"
+        :article-id="article.art_id"
+        class="btn-item"
+      />
+      <!--<van-icon
         color="#777"
         name="good-job-o"
-      />
+      />-->
       <van-icon color="#777777" name="share"></van-icon>
+      <!-- 发布评论 -->
+      <van-popup
+        v-model="isPostShow"
+        position="bottom"
+      >
+        <comment-post
+          :target="article.art_id"
+          @post-success="onPostSuccess"
+        />
+      </van-popup>
+      <!-- 发布评论 -->
     </div>
     <!-- /底部区域 -->
   </div>
@@ -122,12 +136,23 @@
 
 <script>
 import { getArticleByid } from '@/api/article'
-import { addFollow, delFollow } from '@/api/user'
 import { ImagePreview } from 'vant'
+import { addFollow, delFollow } from '@/api/user'
+import FollowUser from '@/components/follow-user'
+import CollectArticle from '@/components/collect-article'
+import LikeArticle from '@/components/like-article'
+import CommentList from './components/comment-list'
+import CommentPost from './components/comment-post'
 
 export default {
   name: 'ArticleIndex',
-  components: {},
+  components: {
+    CollectArticle,
+    FollowUser,
+    LikeArticle,
+    CommentList,
+    CommentPost
+  },
   props: {
     articleId: {
       type: [Number, String, Object],
@@ -139,7 +164,10 @@ export default {
       article: {}, // 文章详情
       loading: true, // 加载中的 loading 状态
       errStatus: 0, // 失败的状态码
-      followLoading: false
+      followLoading: false,
+      commentList: [],
+      isPostShow: false,
+      totalCommentCount: 0
     }
   },
   computed: {},
@@ -160,11 +188,10 @@ export default {
         // }
 
         this.article = data.data
-        console.log(this.article)
 
         // 初始化图片点击预览
         setTimeout(() => {
-          console.log(this.$refs['article-content'])
+          this.previewImage()
         }, 0)
 
         this.loading = false
@@ -213,6 +240,12 @@ export default {
         this.$toast('请求失败,哒咩')
       }
       this.followLoading = false
+    },
+    onPostSuccess (data) {
+      // 关闭弹出层
+      this.isPostShow = false
+      // 将发布内容显示到列表顶部
+      this.commentList.unshift(data.new_obj)
     }
   }
 }

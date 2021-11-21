@@ -53,7 +53,6 @@ export default {
         console.log(this.list)
 
         this.loading = false
-
         // 判断还否还有数据
         if (results.length) {
           this.page++
