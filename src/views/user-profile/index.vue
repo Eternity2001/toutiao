@@ -99,7 +99,12 @@
       position="bottom"
       style="height: 100%;"
     >
-      <UpdatePhoto/>
+      <UpdatePhoto
+        v-if="isUpdatePhotoShow"
+        :img="img"
+        @close="isUpdatePhotoShow = false"
+        @updata-photo="user.photo=$event"
+      />
     </van-popup>
     <!-- /编辑头像 -->
   </div>
@@ -120,7 +125,8 @@ export default {
       isUpdateNameShow: false,
       isUpdateGenderShow: false,
       isUpdateBirthdayShow: false,
-      isUpdatePhotoShow: false
+      isUpdatePhotoShow: false,
+      img: null // 预览的图片
     }
   },
   components: {
@@ -147,9 +153,11 @@ export default {
     onFileChange () {
       // 获取文件对象
       const file = this.$refs.file.files[0]
-      const data = window.URL.createObjectURL(file)
-      console.log(data)
+      this.img = window.URL.createObjectURL(file)
       this.isUpdatePhotoShow = true
+
+      // file-input选择了同一张图片，change事件不会触发
+      // this.$refs.file.value = ''
     }
   }
 }
